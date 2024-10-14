@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct showfer_browserApp: App {
+    @StateObject private var authViewModel = AuthViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(authViewModel)
         }
     }
 }
