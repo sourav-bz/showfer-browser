@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject private var tabViewModel = TabViewModel()
+    @EnvironmentObject private var authViewModel: AuthViewModel
     
     var body: some View {
         TabView {
-            HomeView()
+            Text("Home")
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
             
-            TabsView()
+            Text("Tabs")
                 .tabItem {
                     Label("Tabs", systemImage: "square.on.square")
                 }
@@ -20,12 +20,5 @@ struct MainTabView: View {
                     Label("Settings", systemImage: "gear")
                 }
         }
-        .environmentObject(tabViewModel)
-    }
-}
-
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView()
     }
 }
