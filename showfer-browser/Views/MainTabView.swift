@@ -1,63 +1,63 @@
 import SwiftUI
+import Combine
 
 struct MainTabView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @State private var selectedTab = 0  // 0 represents the Home tab
+    @StateObject private var tabsModel = TabsModel()
     @State private var showCommandSheet = false
     @State private var showSettingsSheet = false
+    @State private var selectedBottomTab = 0
     
     var body: some View {
-        ZStack {
-            // Main content area
-            VStack {
-                Spacer()
-                Text("Home Screen")
-                    .font(.largeTitle)
-                Spacer()
-            }
-            
-            // Custom tab bar at the bottom
-            VStack {
-                Spacer()
-                HStack {
-                    Button(action: { selectedTab = 1 }) {
-                        VStack {
-                            Image(systemName: "square.on.square")
-                            Text("Tabs")
-                        }
-                    }
+        NavigationStack {
+            ZStack {
+                // Main content area
+                HomeView()
+                    .environmentObject(tabsModel)
+                
+                // Custom tab bar at the bottom
+                VStack {
                     Spacer()
-                    Button(action: { showCommandSheet = true }) {
-                        VStack {
-                            Image(systemName: "circle.fill")
-                            Text("Orb")
+                    HStack {
+                        NavigationLink(destination: TabsView().environmentObject(tabsModel)) {
+                            VStack {
+                                Image(systemName: "square.on.square")
+                                Text("Tabs")
+                            }
+                        }
+                        Spacer()
+                        Button(action: { showCommandSheet = true }) {
+                            VStack {
+                                Image(systemName: "circle.fill")
+                                Text("Orb")
+                            }
+                        }
+                        Spacer()
+                        Button(action: { showSettingsSheet = true }) {
+                            VStack {
+                                Image(systemName: "gear")
+                                Text("Settings")
+                            }
                         }
                     }
-                    Spacer()
-                    Button(action: { showSettingsSheet = true }) {
-                        VStack {
-                            Image(systemName: "gear")
-                            Text("Settings")
-                        }
-                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.2))
                 }
-                .padding()
-                .background(Color.gray.opacity(0.2))
+            }
+            .sheet(isPresented: $showCommandSheet) {
+                OrbSheet()
+                    .presentationDetents([.medium])
+            }
+            .sheet(isPresented: $showSettingsSheet) {
+                SettingsSheet()
+                    .presentationDetents([.medium])
             }
         }
-        .sheet(isPresented: $showCommandSheet) {
-            OrbSheet()
-                .presentationDetents([.fraction(0.6)])
-        }
-        .sheet(isPresented: $showSettingsSheet) {
-            SettingsSheet()
-                .presentationDetents([.fraction(0.6)])
-        }
-        .fullScreenCover(isPresented: Binding(
-            get: { selectedTab == 1 },
-            set: { if !$0 { selectedTab = 0 } }
-        )) {
-            TabsView()
-        }
+    }
+}
+
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }
