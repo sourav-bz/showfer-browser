@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SettingsView: View {
+struct SettingsSheet: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     
     var body: some View {
