@@ -1,4 +1,5 @@
 import Foundation
+import WebKit
 
 class TabsModel: ObservableObject {
     @Published var tabs: [Tab] = [
@@ -6,6 +7,10 @@ class TabsModel: ObservableObject {
         Tab(title: "Apple", url: URL(string: "https://www.apple.com")!)
     ]
     @Published var selectedTabIndex: Int = 0
+    
+    var selectedTab: Tab? {
+        tabs[safe: selectedTabIndex]
+    }
     
     func addNewTab() {
         let newTab = Tab(title: "New Tab", url: nil)
@@ -30,5 +35,16 @@ class TabsModel: ObservableObject {
     func selectTab(at index: Int) {
         guard index >= 0 && index < tabs.count else { return }
         selectedTabIndex = index
+    }
+    
+    func updateTabNavigation(at index: Int, canGoBack: Bool, canGoForward: Bool) {
+        guard index >= 0 && index < tabs.count else { return }
+        tabs[index].canGoBack = canGoBack
+        tabs[index].canGoForward = canGoForward
+    }
+    
+    func setWebView(at index: Int, webView: WKWebView) {
+        guard index >= 0 && index < tabs.count else { return }
+        tabs[index].webView = webView
     }
 }

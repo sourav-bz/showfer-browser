@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TabsView: View {
-    @EnvironmentObject var tabsModel: TabsModel
+    @ObservedObject var tabManager: TabManager
 
     // Define the grid layout
     private let columns = [
@@ -11,17 +11,17 @@ struct TabsView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(tabsModel.tabs.indices, id: \.self) { index in
+                ForEach(tabManager.tabs.indices, id: \.self) { index in
                     TabGridItem(
                         tab: Binding(
-                            get: { tabsModel.tabs[index] },
-                            set: { tabsModel.tabs[index] = $0 }
+                            get: { tabManager.tabs[index] },
+                            set: { tabManager.tabs[index] = $0 }
                         ),
-                        isSelected: index == tabsModel.selectedTabIndex,
+                        isSelected: index == tabManager.selectedTabIndex,
                         onDelete: { deleteTab(at: index) }
                     )
                     .onTapGesture {
-                        tabsModel.selectTab(at: index)
+                        tabManager.selectedTabIndex = index
                     }
                 }
             }
@@ -39,11 +39,11 @@ struct TabsView: View {
     }
 
     private func deleteTab(at index: Int) {
-        tabsModel.removeTab(at: index)
+        tabManager.removeTab(at: index)
     }
 
     private func addNewTab() {
-        tabsModel.addNewTab()
+        tabManager.addTab(url: URL(string: "https://www.example.com")!)
     }
 }
 

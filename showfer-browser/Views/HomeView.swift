@@ -1,25 +1,25 @@
 import SwiftUI
+import WebKit
 
 struct HomeView: View {
-    @EnvironmentObject var tabsModel: TabsModel
+    @ObservedObject var tabManager: TabManager
     @State private var searchText = ""
     
     var body: some View {
         VStack {
-            if let selectedTab = tabsModel.tabs[safe: tabsModel.selectedTabIndex] {
-                Text(selectedTab.title)
-                    .font(.largeTitle)
-                
+            if let selectedTab = tabManager.selectedTab {
                 SearchBar(text: Binding(
                     get: { selectedTab.url?.absoluteString ?? "" },
                     set: { self.searchText = $0 }
-                ), onCommit: loadURL)
+                ), onCommit: loadURL,
+                   onBack: goBack,
+                   onForward: goForward)
                 .padding()
-                
-                if let url = selectedTab.url {
-                    Text("URL: \(url.absoluteString)")
-                        .font(.subheadline)
-                }
+
+                WebView(url: selectedTab.url ?? URL(string: "about:blank")!,
+                    tabIndex: tabManager.selectedTabIndex,
+                    tabManager: tabManager)
+                .edgesIgnoringSafeArea(.bottom)
             } else {
                 Text("No tab selected")
                     .font(.largeTitle)
@@ -33,17 +33,34 @@ struct HomeView: View {
             urlString = "https://" + urlString
         }
         guard let url = URL(string: urlString) else { return }
-        tabsModel.updateTabURL(at: tabsModel.selectedTabIndex, with: url)
-        
+        tabManager.updateTab(at: tabManager.selectedTabIndex, url: url)
+    }
+    
+    private func goBack() {
+        tabManager.selectedTab?.webView?.goBack()
+    }
+    
+    private func goForward() {
+        tabManager.selectedTab?.webView?.goForward()
     }
 }
 
 struct SearchBar: View {
     @Binding var text: String
     var onCommit: () -> Void
+    var onBack: () -> Void
+    var onForward: () -> Void
     
     var body: some View {
         HStack {
+            Button(action: onBack) {
+                Image(systemName: "chevron.left")
+            }
+            
+            Button(action: onForward) {
+                Image(systemName: "chevron.right")
+            }
+            
             Image(systemName: "magnifyingglass")
             TextField("Enter URL", text: $text, onCommit: onCommit)
                 .autocapitalization(.none)
@@ -55,14 +72,7 @@ struct SearchBar: View {
             }
         }
         .padding(8)
-        .background(Color(.systemGray6))
+        .background(Color(UIColor.systemGray6))
         .cornerRadius(10)
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-            .environmentObject(TabsModel())
     }
 }

@@ -1,9 +1,9 @@
 import SwiftUI
 import Combine
 
-struct MainTabView: View {
+struct MainView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @StateObject private var tabsModel = TabsModel()
+    @StateObject private var tabManager = TabManager()
     @State private var showCommandSheet = false
     @State private var showSettingsSheet = false
     @State private var selectedBottomTab = 0
@@ -12,14 +12,14 @@ struct MainTabView: View {
         NavigationStack {
             ZStack {
                 // Main content area
-                HomeView()
-                    .environmentObject(tabsModel)
+                HomeView(tabManager: tabManager)
+                    .padding(.bottom, 60) // Add bottom padding to avoid overlap with tab bar
                 
                 // Custom tab bar at the bottom
                 VStack {
                     Spacer()
                     HStack {
-                        NavigationLink(destination: TabsView().environmentObject(tabsModel)) {
+                        NavigationLink(destination: TabsView(tabManager: tabManager)) {
                             VStack {
                                 Image(systemName: "square.on.square")
                                 Text("Tabs")
@@ -41,7 +41,8 @@ struct MainTabView: View {
                         }
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.2))
+                    .background(Color.white)
+                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: -5)
                 }
             }
             .sheet(isPresented: $showCommandSheet) {
