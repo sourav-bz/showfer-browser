@@ -11,7 +11,7 @@ class TabManager: ObservableObject {
     }
     
     func addTab(url: URL) {
-        let newTab = Tab(title: "New Tab", url: url, history: [url], currentHistoryIndex: 0)
+        let newTab = Tab(title: "New Tab", url: url, currentHistoryIndex: 0)
         tabs.append(newTab)
         selectedTabIndex = tabs.count - 1
     }
