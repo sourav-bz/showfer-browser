@@ -21,22 +21,18 @@ struct MainView: View {
                     HStack {
                         NavigationLink(destination: TabsView(tabManager: tabManager)) {
                             VStack {
-                                Image(systemName: "square.on.square")
-                                Text("Tabs")
+                                Image("tabs")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 34, height: 34) 
                             }
                         }
                         Spacer()
-                        Button(action: { showCommandSheet = true }) {
-                            VStack {
-                                Image(systemName: "circle.fill")
-                                Text("Orb")
-                            }
-                        }
+                        AnimatedOrb(width: 45, height: 45, primaryColor: .blue)
                         Spacer()
                         Button(action: { showSettingsSheet = true }) {
                             VStack {
-                                Image(systemName: "gear")
-                                Text("Settings")
+                                Image(systemName: "ellipsis")
                             }
                         }
                     }
