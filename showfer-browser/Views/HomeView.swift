@@ -13,7 +13,9 @@ struct HomeView: View {
                     set: { self.searchText = $0 }
                 ), onCommit: loadURL,
                    onBack: goBack,
-                   onForward: goForward)
+                   onForward: goForward,
+                   canGoBack: selectedTab.canGoBack,
+                   canGoForward: selectedTab.canGoForward)
                 .padding()
 
                 WebView(url: selectedTab.url ?? URL(string: "about:blank")!,
@@ -33,15 +35,15 @@ struct HomeView: View {
             urlString = "https://" + urlString
         }
         guard let url = URL(string: urlString) else { return }
-        tabManager.updateTab(at: tabManager.selectedTabIndex, url: url)
+        tabManager.updateURL(at: tabManager.selectedTabIndex, url: url)
     }
     
     private func goBack() {
-        tabManager.selectedTab?.webView?.goBack()
+        tabManager.goBack(at: tabManager.selectedTabIndex)
     }
     
     private func goForward() {
-        tabManager.selectedTab?.webView?.goForward()
+        tabManager.goForward(at: tabManager.selectedTabIndex)
     }
 }
 
@@ -50,16 +52,22 @@ struct SearchBar: View {
     var onCommit: () -> Void
     var onBack: () -> Void
     var onForward: () -> Void
+    var canGoBack: Bool
+    var canGoForward: Bool
     
     var body: some View {
         HStack {
             Button(action: onBack) {
                 Image(systemName: "chevron.left")
             }
+            .disabled(!canGoBack)
+            .opacity(canGoBack ? 1.0 : 0.5)
             
             Button(action: onForward) {
                 Image(systemName: "chevron.right")
             }
+            .disabled(!canGoForward)
+            .opacity(canGoForward ? 1.0 : 0.5)
             
             Image(systemName: "magnifyingglass")
             TextField("Enter URL", text: $text, onCommit: onCommit)

@@ -19,6 +19,7 @@ struct WebView: UIViewRepresentable {
             let request = URLRequest(url: url)
             uiView.load(request)
         }
+        print("Can go back: \(uiView.canGoBack), Can go forward: \(uiView.canGoForward)")
     }
     
     func makeCoordinator() -> Coordinator {
@@ -36,7 +37,6 @@ struct WebView: UIViewRepresentable {
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             if let url = navigationAction.request.url {
                 print("Navigating to: \(url.absoluteString)")
-                parent.tabManager.updateTab(at: parent.tabIndex, url: url)
             }
             decisionHandler(.allow)
         }
@@ -48,10 +48,9 @@ struct WebView: UIViewRepresentable {
                 print("WebView did finish navigation for tab: \(currentURL.absoluteString)")
                 parent.tabManager.updateTab(at: parent.tabIndex, 
                                             title: webView.title ?? "Untitled", 
-                                            url: currentURL, 
-                                            canGoBack: webView.canGoBack, 
-                                            canGoForward: webView.canGoForward)
+                                            url: currentURL)
                 lastLoadedURL = currentURL
+                print("Updated tab - Can go back: \(webView.canGoBack), Can go forward: \(webView.canGoForward)")
             }
         }
     }

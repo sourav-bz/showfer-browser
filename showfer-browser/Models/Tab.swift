@@ -8,4 +8,6 @@ struct Tab: Identifiable {
     var canGoBack: Bool = false
     var canGoForward: Bool = false
     var webView: WKWebView?
+    var history: [URL] = []
+    var currentHistoryIndex: Int = -1
 }
