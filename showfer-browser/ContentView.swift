@@ -15,7 +15,8 @@ struct ContentView: View {
             if authViewModel.isAuthenticated {
                 MainView()
             } else {
-                LoginView()
+                // LoginView()
+                MainView()
             }
         }
         .environmentObject(authViewModel)
