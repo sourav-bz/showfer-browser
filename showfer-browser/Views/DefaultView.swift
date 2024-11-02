@@ -15,17 +15,18 @@ struct DefaultView: View {
     }
     
     var body: some View {
-        VStack(spacing: 32) {
+        VStack() {
             Image("showfer-dark")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 200)
+                .padding(100) 
             
             DefaultSearchBar(text: $searchText, onCommit: loadURL)
                 .padding(.horizontal, 24)
                 .frame(maxWidth: 500)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }
 
