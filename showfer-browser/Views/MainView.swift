@@ -21,10 +21,11 @@ struct MainView: View {
                     HStack {
                         NavigationLink(destination: TabsView(tabManager: tabManager)) {
                             VStack {
-                                Image("tabs")
+                                Image("tab")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 34, height: 34) 
+                                    .frame(width: 34, height: 34)
+                                    .shadow(radius: 0)
                             }
                         }
                         Spacer()
@@ -34,11 +35,17 @@ struct MainView: View {
                         Button(action: { showSettingsSheet = true }) {
                             VStack {
                                 Image(systemName: "ellipsis")
+                                    .foregroundColor(Color(hex: "#8F93A5"))
                             }
                         }
                     }
                     .padding()
-                    .background(Color.white)
+                    .background(
+                        Color.white
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            )
+                    )
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: -5)
                 }
             }
