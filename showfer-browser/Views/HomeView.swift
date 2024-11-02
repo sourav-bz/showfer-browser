@@ -23,8 +23,7 @@ struct HomeView: View {
                     tabManager: tabManager)
                 .edgesIgnoringSafeArea(.bottom)
             } else {
-                Text("No tab selected")
-                    .font(.largeTitle)
+                DefaultView()
             }
         }
     }
