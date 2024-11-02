@@ -13,6 +13,7 @@ struct MainView: View {
             ZStack {
                 // Main content area
                 HomeView(tabManager: tabManager)
+                    .environmentObject(tabManager)
                     .padding(.bottom, 60) // Add bottom padding to avoid overlap with tab bar
                 
                 // Custom tab bar at the bottom

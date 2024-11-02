@@ -11,7 +11,7 @@ struct DefaultView: View {
             urlString = "https://" + urlString
         }
         guard let url = URL(string: urlString) else { return }
-        tabManager.updateURL(at: tabManager.selectedTabIndex, url: url)
+        tabManager.addTab(url: url)
     }
     
     var body: some View {
