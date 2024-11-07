@@ -16,7 +16,6 @@ struct HomeView: View {
                    onForward: goForward,
                    canGoBack: selectedTab.canGoBack,
                    canGoForward: selectedTab.canGoForward)
-                .padding()
 
                 WebView(url: selectedTab.url ?? URL(string: "about:blank")!,
                     tabIndex: tabManager.selectedTabIndex,
@@ -53,33 +52,77 @@ struct SearchBar: View {
     var onForward: () -> Void
     var canGoBack: Bool
     var canGoForward: Bool
+    @State private var isEditing = false
     
     var body: some View {
-        HStack {
-            Button(action: onBack) {
-                Image(systemName: "chevron.left")
-            }
-            .disabled(!canGoBack)
-            .opacity(canGoBack ? 1.0 : 0.5)
-            
-            Button(action: onForward) {
-                Image(systemName: "chevron.right")
-            }
-            .disabled(!canGoForward)
-            .opacity(canGoForward ? 1.0 : 0.5)
-            
-            Image(systemName: "magnifyingglass")
-            TextField("Enter URL", text: $text, onCommit: onCommit)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-            if !text.isEmpty {
-                Button(action: { text = "" }) {
-                    Image(systemName: "xmark.circle.fill")
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                // Back/Forward Navigation
+                HStack(spacing: 4) {
+                    Button(action: onBack) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.gray)
+                            .frame(width: 28, height: 28)
+                            .background(Color(.systemBackground))
+                            .clipShape(Circle())
+                    }
+                    .disabled(!canGoBack)
+                    .opacity(canGoBack ? 1.0 : 0.5)
+                    
+                    Button(action: onForward) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.gray)
+                            .frame(width: 28, height: 28)
+                            .background(Color(.systemBackground))
+                            .clipShape(Circle())
+                    }
+                    .disabled(!canGoForward)
+                    .opacity(canGoForward ? 1.0 : 0.5)
                 }
+                
+                // Search TextField
+                HStack {
+                    TextField("Search or enter website", text: $text, onCommit: onCommit)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .font(.system(size: 16))
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .onTapGesture {
+                            isEditing = true
+                        }
+                    
+                    Button(action: onCommit) {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 14))
+                    }
+                }
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(16)
+                .frame(maxWidth: .infinity)
             }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground))
+            
+            Divider()
         }
-        .padding(8)
-        .background(Color(UIColor.systemGray6))
-        .cornerRadius(10)
+    }
+}
+
+// Preview provider for SwiftUI Canvas
+struct SearchBar_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchBar(
+            text: .constant("twitter.com"),
+            onCommit: {},
+            onBack: {},
+            onForward: {},
+            canGoBack: true,
+            canGoForward: false
+        )
     }
 }

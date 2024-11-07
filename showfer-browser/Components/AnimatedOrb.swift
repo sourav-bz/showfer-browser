@@ -41,6 +41,9 @@ struct AnimatedOrb: View {
     
     var body: some View {
         ZStack {
+            // New bordered circle
+            
+            
             // Base circle with gradient
             Circle()
                 .fill(

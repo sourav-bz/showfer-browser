@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		21CC873F2CDD71E600C61CA1 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 21CC873E2CDD71E600C61CA1 /* Starscream */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		21FB47292CBD734600A502F0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		21FB47322CBD734600A502F0 /* showfer-browserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "showfer-browserUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		21CC873C2CDD71A500C61CA1 /* Exceptions for "showfer-browser" folder in "showfer-browser" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 21FB47172CBD734500A502F0 /* showfer-browser */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		21FB471A2CBD734500A502F0 /* showfer-browser */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				21CC873C2CDD71A500C61CA1 /* Exceptions for "showfer-browser" folder in "showfer-browser" target */,
+			);
 			path = "showfer-browser";
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21CC873F2CDD71E600C61CA1 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			);
 			name = "showfer-browser";
 			packageProductDependencies = (
+				21CC873E2CDD71E600C61CA1 /* Starscream */,
 			);
 			productName = "showfer-browser";
 			productReference = 21FB47182CBD734500A502F0 /* showfer-browser.app */;
@@ -195,6 +214,9 @@
 			);
 			mainGroup = 21FB470F2CBD734500A502F0;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21FB47192CBD734500A502F0 /* Products */;
 			projectDirPath = "";
@@ -399,7 +421,9 @@
 				DEVELOPMENT_TEAM = RYLB9B332S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "showfer-browser/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Showfer;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone for speech recognition";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -429,7 +453,9 @@
 				DEVELOPMENT_TEAM = RYLB9B332S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "showfer-browser/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Showfer;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone for speech recognition";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -560,6 +586,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		21CC873E2CDD71E600C61CA1 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 21FB47102CBD734500A502F0 /* Project object */;
 }
