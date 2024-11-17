@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		21CC873F2CDD71E600C61CA1 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 21CC873E2CDD71E600C61CA1 /* Starscream */; };
+		21ED213C2CEA7EF5003E6F27 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 21ED213B2CEA7EF5003E6F27 /* Starscream */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21CC873F2CDD71E600C61CA1 /* Starscream in Frameworks */,
+				21ED213C2CEA7EF5003E6F27 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +130,7 @@
 			);
 			name = "showfer-browser";
 			packageProductDependencies = (
-				21CC873E2CDD71E600C61CA1 /* Starscream */,
+				21ED213B2CEA7EF5003E6F27 /* Starscream */,
 			);
 			productName = "showfer-browser";
 			productReference = 21FB47182CBD734500A502F0 /* showfer-browser.app */;
@@ -215,7 +215,7 @@
 			mainGroup = 21FB470F2CBD734500A502F0;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */,
+				21ED213A2CEA7EF5003E6F27 /* XCRemoteSwiftPackageReference "Starscream" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21FB47192CBD734500A502F0 /* Products */;
@@ -588,20 +588,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+		21ED213A2CEA7EF5003E6F27 /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.8;
+				kind = exactVersion;
+				version = 4.0.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		21CC873E2CDD71E600C61CA1 /* Starscream */ = {
+		21ED213B2CEA7EF5003E6F27 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 21CC873D2CDD71E600C61CA1 /* XCRemoteSwiftPackageReference "Starscream" */;
+			package = 21ED213A2CEA7EF5003E6F27 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
 /* End XCSwiftPackageProductDependency section */

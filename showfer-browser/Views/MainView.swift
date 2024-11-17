@@ -1,8 +1,12 @@
 import SwiftUI
 import Combine
+import AVFoundation
+import Starscream
+
 struct MainView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     @StateObject private var tabManager = TabManager()
+    @StateObject private var transcriptionManager = TranscriptionManager()
     @State private var showCommandSheet = false
     @State private var showSettingsSheet = false
     @State private var selectedBottomTab = 0
@@ -21,7 +25,8 @@ struct MainView: View {
                     TabBarView(
                         isOrbExpanded: $isOrbExpanded,
                         showSettingsSheet: $showSettingsSheet,
-                        tabManager: tabManager
+                        tabManager: tabManager,
+                        transcriptionManager: transcriptionManager
                     )
                     .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0)
                 }
@@ -44,6 +49,7 @@ struct TabBarView: View {
     @Binding var isOrbExpanded: Bool
     @Binding var showSettingsSheet: Bool
     @ObservedObject var tabManager: TabManager
+    @ObservedObject var transcriptionManager: TranscriptionManager
     
     var body: some View {
         VStack(spacing: 0) {
@@ -84,6 +90,11 @@ struct TabBarView: View {
                             Button(action: {
                                 withAnimation {
                                     isOrbExpanded.toggle()
+                                    if isOrbExpanded {
+                                        transcriptionManager.startTranscription()
+                                    } else {
+                                        transcriptionManager.stopTranscription()
+                                    }
                                 }
                             }) {
                                 AnimatedOrb(width: 50, height: 50, primaryColor: Color(hex: "#6D67E4"))
@@ -93,7 +104,7 @@ struct TabBarView: View {
                             
                             // Text that appears when expanded
                             if isOrbExpanded {
-                                Text("Just say what you need")
+                                Text(transcriptionManager.transcriptText.isEmpty ? "Just say what you need" : transcriptionManager.transcriptText)
                                     .foregroundColor(.gray)
                                     .lineLimit(1)
                                     .truncationMode(.tail)
@@ -105,6 +116,7 @@ struct TabBarView: View {
                                 Button(action: {
                                     withAnimation {
                                         isOrbExpanded = false
+                                        transcriptionManager.stopTranscription()
                                     }
                                 }) {
                                     Image(systemName: "xmark")
