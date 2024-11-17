@@ -72,15 +72,15 @@ struct TabBarView: View {
                 // Center Orb Container
                 ZStack {
                     GeometryReader { geometry in
-                        let parentWidth = geometry.size.width + 140 // Add back the width of both side buttons
+                        let parentWidth = geometry.size.width + 140
                         let expandedWidth = parentWidth - 32
                         
-                        // Animated container
+                        // Dynamic height container
                         RoundedRectangle(cornerRadius: 30)
                             .strokeBorder(Color.gray.opacity(0.3), lineWidth: 1)
                             .frame(
                                 width: isOrbExpanded ? expandedWidth : 60,
-                                height: 60
+                                height: isOrbExpanded ? nil : 60 // Remove fixed height when expanded
                             )
                             .position(x: geometry.size.width / 2, y: 30)
                             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isOrbExpanded)
@@ -104,28 +104,56 @@ struct TabBarView: View {
                             
                             // Text that appears when expanded
                             if isOrbExpanded {
-                                Text(transcriptionManager.transcriptText.isEmpty ? "Just say what you need" : transcriptionManager.transcriptText)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.leading, 16)
-                                    .transition(.opacity)
-                                
-                                // Close button
+                                if transcriptionManager.transcriptText.isEmpty {
+                                    Text("Just say what you need")
+                                        .foregroundColor(.gray)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .id("transcriptText")
+                                        .transition(.opacity)
+                                        .font(.system(size: 16, weight: .medium))
+                                } else {
+                                    ScrollViewReader { scrollProxy in
+                                        ScrollView {
+                                            // Transcript Text
+                                            Text(transcriptionManager.transcriptText)
+                                                .foregroundColor(.black)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding(.leading, 16)
+                                                .padding(.vertical, 8)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .id("transcriptText")
+                                                .transition(.opacity)
+                                        }
+                                        .frame(maxHeight: 200)
+                                        .onChange(of: transcriptionManager.transcriptText) { _ in
+                                                withAnimation {
+                                                    scrollProxy.scrollTo("transcriptText", anchor: .bottom)
+                                                }
+                                        }
+                                    }
+                                }
+
+                                // Action button (close or go)
                                 Button(action: {
                                     withAnimation {
-                                        isOrbExpanded = false
-                                        transcriptionManager.stopTranscription()
+                                        if transcriptionManager.transcriptText.isEmpty {
+                                            isOrbExpanded = false
+                                            transcriptionManager.stopTranscription()
+                                        } else {
+                                            // Handle "go" action here
+                                            print("Go button tapped")
+                                        }
                                     }
                                 }) {
-                                    Image(systemName: "xmark")
+                                    Image(systemName: transcriptionManager.transcriptText.isEmpty ? "xmark" : "arrow.right")
                                         .font(.system(size: 12, weight: .medium))
                                         .foregroundColor(.white)
                                         .frame(width: 24, height: 24)
                                         .background(
                                             Circle()
-                                                .fill(Color.gray.opacity(0.3))
+                                                .fill(transcriptionManager.transcriptText.isEmpty ? 
+                                                    Color.gray.opacity(0.3) : 
+                                                    Color(hex: "#6D67E4"))
                                         )
                                 }
                                 .padding(.trailing, 16)
