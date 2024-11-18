@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 import AVFoundation
 import Starscream
+import WebKit
 
 struct MainView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
@@ -11,6 +12,8 @@ struct MainView: View {
     @State private var showSettingsSheet = false
     @State private var selectedBottomTab = 0
     @State private var isOrbExpanded = false
+    private let openAIService = OpenAIService()
+    @State private var aiResponse = ""
     
     var body: some View {
         ZStack {
@@ -25,15 +28,18 @@ struct MainView: View {
                     TabBarView(
                         isOrbExpanded: $isOrbExpanded,
                         showSettingsSheet: $showSettingsSheet,
+                        showCommandSheet: $showCommandSheet,
+                        aiResponse: $aiResponse,
                         tabManager: tabManager,
-                        transcriptionManager: transcriptionManager
+                        transcriptionManager: transcriptionManager,
+                        openAIService: openAIService
                     )
                     .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0)
                 }
                 .edgesIgnoringSafeArea(.bottom)
                 .sheet(isPresented: $showCommandSheet) {
-                    OrbSheet()
-                        .presentationDetents([.medium])
+                    OrbSheet(aiResponse: aiResponse)
+                        .presentationDetents([.medium, .large])
                 }
                 .sheet(isPresented: $showSettingsSheet) {
                     SettingsSheet()
@@ -48,8 +54,31 @@ struct MainView: View {
 struct TabBarView: View {
     @Binding var isOrbExpanded: Bool
     @Binding var showSettingsSheet: Bool
+    @Binding var showCommandSheet: Bool
+    @Binding var aiResponse: String
     @ObservedObject var tabManager: TabManager
     @ObservedObject var transcriptionManager: TranscriptionManager
+    private let openAIService: OpenAIService
+    @State private var currentScreenshot: UIImage?
+    @State private var keyboardHeight: CGFloat = 0
+    
+    init(
+        isOrbExpanded: Binding<Bool>,
+        showSettingsSheet: Binding<Bool>,
+        showCommandSheet: Binding<Bool>,
+        aiResponse: Binding<String>,
+        tabManager: TabManager,
+        transcriptionManager: TranscriptionManager,
+        openAIService: OpenAIService
+    ) {
+        self._isOrbExpanded = isOrbExpanded
+        self._showSettingsSheet = showSettingsSheet
+        self._showCommandSheet = showCommandSheet
+        self._aiResponse = aiResponse
+        self.tabManager = tabManager
+        self.transcriptionManager = transcriptionManager
+        self.openAIService = openAIService
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -140,8 +169,70 @@ struct TabBarView: View {
                                             isOrbExpanded = false
                                             transcriptionManager.stopTranscription()
                                         } else {
-                                            // Handle "go" action here
-                                            print("Go button tapped")
+                                            Task {
+                                                do {
+                                                    // Get WebView from TabManager's current tab
+                                                    let base64Image: String
+                                                    
+                                                    print("Debug: Starting screenshot capture")
+                                                    if let webView = tabManager.getCurrentWebView() {
+                                                        print("Debug: WebView obtained:", webView)
+                                                        do {
+                                                            print("Debug: Attempting to take snapshot...")
+                                                            let config = WKSnapshotConfiguration()
+                                                            let screenshot = try await webView.takeSnapshot(configuration: config)
+                                                            print("Debug: Screenshot captured successfully")
+                                                            
+                                                            if let imageData = screenshot.jpegData(compressionQuality: 0.6) {
+                                                                print("Debug: Image data converted successfully, size: \(imageData.count) bytes")
+                                                                base64Image = imageData.base64EncodedString()
+                                                                print("Debug: Base64 conversion successful, length: \(base64Image.count)")
+                                                            } else {
+                                                                print("Debug: Failed to convert screenshot to JPEG data")
+                                                                base64Image = ""
+                                                            }
+                                                        } catch {
+                                                            print("Debug: Screenshot capture failed with error:", error)
+                                                            base64Image = ""
+                                                        }
+                                                    } else {
+                                                        print("Debug: getCurrentWebView() returned nil")
+                                                        base64Image = ""
+                                                    }
+                                                    
+                                                    let response = try await openAIService.generateResponse(
+                                                        for: transcriptionManager.transcriptText,
+                                                        screenshotBase64: base64Image
+                                                    )
+                                                        
+                                                    await MainActor.run {
+                                                        switch response {
+                                                        case .text(let content):
+                                                                print("Showing text response:", content) // Debug print
+                                                                aiResponse = content
+                                                                showCommandSheet = true
+                                                            case .search(let query):
+                                                                print("Performing search for:", query) // Debug print
+                                                                if let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                                                                   let url = URL(string: "https://www.google.com/search?q=\(encodedQuery)") {
+                                                                    print("Opening URL:", url) // Debug print
+                                                                    tabManager.addTab(url: url)
+                                                                }
+                                                            case .input(let text):
+                                                                print("Input text:", text) // Debug print
+                                                                tabManager.performTextInput(at: tabManager.selectedTabIndex, text: text)
+                                                            }
+
+                                                            transcriptionManager.transcriptText = ""
+                                                            isOrbExpanded = false
+                                                            transcriptionManager.stopTranscription()
+                                                        }
+                                                    
+                                                } catch {
+                                                    print("Error getting AI response:", error)
+                                                    // Handle error appropriately
+                                                }
+                                            }
                                         }
                                     }
                                 }) {
@@ -188,6 +279,29 @@ struct TabBarView: View {
             .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: -5)
         }
         .background(Color.clear)
+        .offset(y: -keyboardHeight)
+        .onAppear {
+            setupKeyboardNotifications()
+        }
+        .onDisappear {
+            removeKeyboardNotifications()
+        }
+    }
+    
+    private func setupKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
+            if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                keyboardHeight = keyboardFrame.height
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+            keyboardHeight = 0
+        }
+    }
+    
+    private func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 extension Collection {

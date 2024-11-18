@@ -43,12 +43,13 @@ struct WebView: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             guard let currentURL = webView.url else { return }
-            
+            parent.tabManager.setWebView(at: parent.tabIndex, webView: webView)
             if currentURL != lastLoadedURL {
                 print("WebView did finish navigation for tab: \(currentURL.absoluteString)")
                 parent.tabManager.updateTab(at: parent.tabIndex, 
                                             title: webView.title ?? "Untitled", 
-                                            url: currentURL)
+                                            url: currentURL,
+                                            webView: webView)
                 lastLoadedURL = currentURL
                 print("Updated tab - Can go back: \(webView.canGoBack), Can go forward: \(webView.canGoForward)")
             }
