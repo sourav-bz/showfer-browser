@@ -39,7 +39,7 @@ struct ContentView: View {
                             .frame(width: 0, height: 0)
                     )
             } else {
-                MainView()
+                LoginView()
                     .overlay(
                         StatusBarController()
                             .frame(width: 0, height: 0)
