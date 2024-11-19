@@ -6,7 +6,7 @@ import WebKit
 
 struct MainView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @StateObject private var tabManager = TabManager()
+    @EnvironmentObject private var tabManager: TabManager
     @StateObject private var transcriptionManager = TranscriptionManager()
     @State private var showCommandSheet = false
     @State private var showSettingsSheet = false

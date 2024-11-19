@@ -36,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2181EA972CECCBAE00C87AAE /* showfer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = showfer.entitlements; sourceTree = "<group>"; };
 		21FB47182CBD734500A502F0 /* showfer-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "showfer-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FB47282CBD734600A502F0 /* showfer-browserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "showfer-browserTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FB47322CBD734600A502F0 /* showfer-browserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "showfer-browserUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +110,7 @@
 		21FB470F2CBD734500A502F0 = {
 			isa = PBXGroup;
 			children = (
+				2181EA972CECCBAE00C87AAE /* showfer.entitlements */,
 				21FB471A2CBD734500A502F0 /* showfer-browser */,
 				21FB472B2CBD734600A502F0 /* showfer-browserTests */,
 				21FB47352CBD734600A502F0 /* showfer-browserUITests */,
@@ -443,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "showfer-browser/showfer-browser.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"showfer-browser/Preview Content\"";
 				DEVELOPMENT_TEAM = RYLB9B332S;
 				ENABLE_PREVIEWS = YES;
@@ -461,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "sourav.showfer-browser";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -477,7 +479,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "showfer-browser/showfer-browser.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"showfer-browser/Preview Content\"";
 				DEVELOPMENT_TEAM = RYLB9B332S;
 				ENABLE_PREVIEWS = YES;
@@ -495,7 +497,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "sourav.showfer-browser";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

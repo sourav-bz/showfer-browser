@@ -14,8 +14,17 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.65942031867-33k2fa9vn9iqrjueiuqkughoil7vrr25</string>
+				<string>http</string>
+				<string>https</string>
 			</array>
+			<key>CFBundleURLName</key>
+			<string>sourav.showfer-browser</string>
 		</dict>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>http</string>
+        <string>https</string>
+    </array>
 </dict>
 </plist>

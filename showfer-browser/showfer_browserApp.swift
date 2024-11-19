@@ -11,6 +11,7 @@ import GoogleSignIn
 @main
 struct showfer_browserApp: App {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var tabManager = TabManager()
     
     init() {
         // Configure Google Sign In
@@ -23,10 +24,26 @@ struct showfer_browserApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(authViewModel)
-                // Handle Google Sign In URL
+                .environmentObject(tabManager)
+                // Handle both Google Sign In and browser URLs
                 .onOpenURL { url in
-                    GIDSignIn.sharedInstance.handle(url)
+                    if url.scheme == "com.googleusercontent.apps.65942031867-33k2fa9vn9iqrjueiuqkughoil7vrr25" {
+                        GIDSignIn.sharedInstance.handle(url)
+                    } else {
+                        // Handle browser URLs
+                        handleIncomingURL(url)
+                    }
                 }
         }
+    }
+    
+    private func handleIncomingURL(_ url: URL) {
+        // Make sure it's a valid http/https URL
+        guard url.scheme?.lowercased() == "http" || url.scheme?.lowercased() == "https" else {
+            return
+        }
+        
+        // Add new tab with the URL
+        tabManager.addTab(url: url)
     }
 }

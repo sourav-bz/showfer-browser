@@ -28,12 +28,14 @@ struct StatusBarController: UIViewControllerRepresentable {
 }
 
 struct ContentView: View {
-    @StateObject private var authViewModel = AuthViewModel()
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    @EnvironmentObject private var tabManager: TabManager
     
     var body: some View {
         Group {
             if authViewModel.isAuthenticated || authViewModel.isSkipped {
                 MainView()
+                    .environmentObject(tabManager)
                     .overlay(
                         StatusBarController()
                             .frame(width: 0, height: 0)
