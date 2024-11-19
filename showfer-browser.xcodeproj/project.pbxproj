@@ -13,6 +13,8 @@
 		219F11902CEC0F4800C86197 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 219F118F2CEC0F4800C86197 /* Realtime */; };
 		219F11922CEC0F4800C86197 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 219F11912CEC0F4800C86197 /* Storage */; };
 		219F11942CEC0F4800C86197 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 219F11932CEC0F4800C86197 /* Supabase */; };
+		219F11972CEC133000C86197 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 219F11962CEC133000C86197 /* GoogleSignIn */; };
+		219F11992CEC133000C86197 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 219F11982CEC133000C86197 /* GoogleSignInSwift */; };
 		21ED213C2CEA7EF5003E6F27 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 21ED213B2CEA7EF5003E6F27 /* Starscream */; };
 /* End PBXBuildFile section */
 
@@ -75,7 +77,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219F11992CEC133000C86197 /* GoogleSignInSwift in Frameworks */,
 				219F11942CEC0F4800C86197 /* Supabase in Frameworks */,
+				219F11972CEC133000C86197 /* GoogleSignIn in Frameworks */,
 				219F11922CEC0F4800C86197 /* Storage in Frameworks */,
 				219F118E2CEC0F4800C86197 /* PostgREST in Frameworks */,
 				219F118C2CEC0F4800C86197 /* Functions in Frameworks */,
@@ -149,6 +153,8 @@
 				219F118F2CEC0F4800C86197 /* Realtime */,
 				219F11912CEC0F4800C86197 /* Storage */,
 				219F11932CEC0F4800C86197 /* Supabase */,
+				219F11962CEC133000C86197 /* GoogleSignIn */,
+				219F11982CEC133000C86197 /* GoogleSignInSwift */,
 			);
 			productName = "showfer-browser";
 			productReference = 21FB47182CBD734500A502F0 /* showfer-browser.app */;
@@ -235,6 +241,7 @@
 			packageReferences = (
 				21ED213A2CEA7EF5003E6F27 /* XCRemoteSwiftPackageReference "Starscream" */,
 				219F11882CEC0F4800C86197 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				219F11952CEC133000C86197 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21FB47192CBD734500A502F0 /* Products */;
@@ -617,6 +624,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		219F11952CEC133000C86197 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		21ED213A2CEA7EF5003E6F27 /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
@@ -657,6 +672,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 219F11882CEC0F4800C86197 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		219F11962CEC133000C86197 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 219F11952CEC133000C86197 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		219F11982CEC133000C86197 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 219F11952CEC133000C86197 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 		21ED213B2CEA7EF5003E6F27 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

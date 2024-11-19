@@ -6,5 +6,16 @@
 	<string>We need access to your microphone for voice commands and transcription.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>We need speech recognition to understand your voice commands.</string>
+	<key>GIDClientID</key>
+	<string>65942031867-33k2fa9vn9iqrjueiuqkughoil7vrr25.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.65942031867-33k2fa9vn9iqrjueiuqkughoil7vrr25</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

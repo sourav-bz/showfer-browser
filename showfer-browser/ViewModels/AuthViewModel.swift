@@ -2,6 +2,7 @@
 import SwiftUI
 import AuthenticationServices
 import Supabase
+import GoogleSignIn
 
 class AuthViewModel: NSObject, ObservableObject {
     private let client: SupabaseClient
@@ -41,7 +42,48 @@ class AuthViewModel: NSObject, ObservableObject {
     }
     
     func signInWithGoogle() {
-        // Implement Google Sign In
+        Task {
+            do {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = windowScene.windows.first,
+                      let rootViewController = window.rootViewController else {
+                    throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No root view controller found"])
+                }
+                
+                let result = try await GIDSignIn.sharedInstance.signIn(
+                    withPresenting: rootViewController
+                )
+                
+                guard let idToken = result.user.idToken?.tokenString else {
+                    throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No ID token found"])
+                }
+                
+                let accessToken = result.user.accessToken.tokenString
+                let displayName = result.user.profile?.name ?? ""
+                
+                // Sign in to Supabase with Google token
+                let response = try await client.auth.signInWithIdToken(
+                    credentials: .init(
+                        provider: .google,
+                        idToken: idToken,
+                        accessToken: accessToken
+                    )
+                )
+                
+                // // Update user profile
+                // if !displayName.isEmpty {
+                //     try await updateUserProfile(userId: response.user.id, displayName: displayName)
+                // }
+                
+                DispatchQueue.main.async {
+                    self.isAuthenticated = true
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.error = error
+                }
+            }
+        }
     }
     
     func handleAppleSignIn(credential: ASAuthorizationAppleIDCredential) {
@@ -105,5 +147,26 @@ extension AuthViewModel: ASAuthorizationControllerPresentationContextProviding {
             fatalError("No window available")
         }
         return window
+    }
+}
+
+// UIApplication extension to get top view controller
+extension UIApplication {
+    func topMostViewController() -> UIViewController? {
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .map { $0 as? UIWindowScene }
+            .compactMap { $0 }
+            .first?.windows
+            .filter { $0.isKeyWindow }
+            .first
+        
+        var topController = keyWindow?.rootViewController
+        
+        while let presentedController = topController?.presentedViewController {
+            topController = presentedController
+        }
+        
+        return topController
     }
 }
