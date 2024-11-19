@@ -48,6 +48,11 @@ struct MainView: View {
                     } else {
                         LoginView()
                             .presentationDetents([.large])
+                            .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
+                                if isAuthenticated {
+                                    showSettingsSheet = false
+                                }
+                            }
                     }
                 }
             }
@@ -140,7 +145,7 @@ struct TabBarView: View {
                                     width: 50, 
                                     height: 50, 
                                     primaryColor: (authViewModel.isAuthenticated) ? Color(hex: "#6D67E4") : Color.gray,
-                                    animate: false
+                                    animate: authViewModel.isAuthenticated ? true : false
                                 )
                                 .frame(maxWidth: 50, maxHeight: 50)
                             }

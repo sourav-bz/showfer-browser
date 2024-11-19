@@ -136,6 +136,15 @@ struct AnimatedOrb: View {
                     }
                 }
             }
+            .onChange(of: animate) { newValue in
+                if newValue {
+                    withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
+                        rotation = 360
+                    }
+                } else {
+                    rotation = 0
+                }
+            }
         }
     }
 }
