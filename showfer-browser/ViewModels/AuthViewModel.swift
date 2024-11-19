@@ -7,6 +7,7 @@ import GoogleSignIn
 class AuthViewModel: NSObject, ObservableObject {
     private let client: SupabaseClient
     @Published var isAuthenticated = false
+    @Published var isSkipped = false
     @Published var error: Error?
     
     override init() {
@@ -113,11 +114,20 @@ class AuthViewModel: NSObject, ObservableObject {
         }
     }
 
+    func skipAuthentication() {
+        DispatchQueue.main.async {
+            self.isSkipped = true
+        }
+    }
+
     func signOut() {
         Task {
-            try await client.auth.signOut()
+            if !isSkipped {
+                try await client.auth.signOut()
+            }
             DispatchQueue.main.async {
                 self.isAuthenticated = false
+                self.isSkipped = false
             }
         }
     }

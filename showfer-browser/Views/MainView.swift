@@ -42,8 +42,13 @@ struct MainView: View {
                         .presentationDetents([.medium, .large])
                 }
                 .sheet(isPresented: $showSettingsSheet) {
-                    SettingsSheet()
-                        .presentationDetents([.medium])
+                    if authViewModel.isAuthenticated {
+                        SettingsSheet()
+                            .presentationDetents([.medium])
+                    } else {
+                        LoginView()
+                            .presentationDetents([.large])
+                    }
                 }
             }
         }
@@ -52,6 +57,7 @@ struct MainView: View {
 }
 
 struct TabBarView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
     @Binding var isOrbExpanded: Bool
     @Binding var showSettingsSheet: Bool
     @Binding var showCommandSheet: Bool
@@ -115,19 +121,28 @@ struct TabBarView: View {
                             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isOrbExpanded)
                         
                         HStack(spacing: 0) {
-                            // Orb button with animation
+                            // Modified Orb button with authentication check
                             Button(action: {
-                                withAnimation {
-                                    isOrbExpanded.toggle()
-                                    if isOrbExpanded {
-                                        transcriptionManager.startTranscription()
-                                    } else {
-                                        transcriptionManager.stopTranscription()
+                                if authViewModel.isAuthenticated {
+                                    withAnimation {
+                                        isOrbExpanded.toggle()
+                                        if isOrbExpanded {
+                                            transcriptionManager.startTranscription()
+                                        } else {
+                                            transcriptionManager.stopTranscription()
+                                        }
                                     }
+                                } else {
+                                    showSettingsSheet = true  // We'll use this to show login
                                 }
                             }) {
-                                AnimatedOrb(width: 50, height: 50, primaryColor: Color(hex: "#6D67E4"))
-                                    .frame(maxWidth: 50, maxHeight: 50)
+                                AnimatedOrb(
+                                    width: 50, 
+                                    height: 50, 
+                                    primaryColor: (authViewModel.isAuthenticated) ? Color(hex: "#6D67E4") : Color.gray,
+                                    animate: false
+                                )
+                                .frame(maxWidth: 50, maxHeight: 50)
                             }
                             .padding(.leading, isOrbExpanded ? 8 : 0)
                             

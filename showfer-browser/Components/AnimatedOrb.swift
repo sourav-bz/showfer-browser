@@ -36,6 +36,7 @@ struct AnimatedOrb: View {
     let width: CGFloat
     let height: CGFloat
     let primaryColor: Color
+    let animate: Bool
     
     @State private var rotation: Double = 0
     
@@ -129,8 +130,10 @@ struct AnimatedOrb: View {
                 }
             }
             .onAppear {
-                withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
-                    rotation = 360
+                if animate {
+                    withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
+                        rotation = 360
+                    }
                 }
             }
         }
@@ -143,7 +146,8 @@ struct AnimatedOrb_Previews: PreviewProvider {
         AnimatedOrb(
             width: 200,
             height: 200,
-            primaryColor: .blue
+            primaryColor: .blue,
+            animate: true
         )
         .preferredColorScheme(.dark)
     }

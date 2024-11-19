@@ -75,6 +75,16 @@ struct LoginView: View {
                         .background(.white)
                         .cornerRadius(10)
                     }
+                    
+                    // Skip Button
+                    Button(action: {
+                        authViewModel.skipAuthentication()
+                    }) {
+                        Text("Skip for now")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 

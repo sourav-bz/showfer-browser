@@ -32,7 +32,7 @@ struct ContentView: View {
     
     var body: some View {
         Group {
-            if authViewModel.isAuthenticated {
+            if authViewModel.isAuthenticated || authViewModel.isSkipped {
                 MainView()
                     .overlay(
                         StatusBarController()
