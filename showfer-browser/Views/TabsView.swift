@@ -30,6 +30,7 @@ struct TabsView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: addNewTab) {
                     Image(systemName: "plus")
+                        .foregroundColor(Color(hex: "#6D67E4"))
                 }
             }
         }
@@ -62,12 +63,12 @@ struct TabListItem: View {
                         Image(systemName: "globe")
                     }
                     .font(.title2)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(hex: "#6D67E4"))
                     .frame(width: 40, height: 40)
                 } else {
                     Image(systemName: "globe")
                         .font(.title2)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(hex: "#6D67E4"))
                         .frame(width: 40)
                 }
                 

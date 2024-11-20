@@ -50,6 +50,7 @@ struct ContentView: View {
         }
         .environmentObject(authViewModel)
         .preferredColorScheme(.light)
+        .tint(Color(hex: "#6D67E4"))
     }
 }
 
