@@ -1,7 +1,5 @@
 import Foundation
 import WebKit
-import UIKit
-
 class TabManager: ObservableObject {
     @Published var tabs: [Tab] = []
     @Published var selectedTabIndex: Int = 0
@@ -12,7 +10,10 @@ class TabManager: ObservableObject {
     }
     
     func addTab(url: URL) {
-        let newTab = Tab(title: "New Tab", url: url, currentHistoryIndex: 0)
+        let newTab = Tab(
+            title: "New Tab",
+            url: url
+        )
         tabs.append(newTab)
         selectedTabIndex = tabs.count - 1
     }
@@ -32,6 +33,7 @@ class TabManager: ObservableObject {
     }
     
     func updateTab(at index: Int, title: String? = nil, url: URL? = nil, webView: WKWebView? = nil) {
+        print("Updating tab at index: \(index) with title: \(title ?? "nil"), url: \(url?.absoluteString ?? "nil")")
         guard index < tabs.count else { return }
         if let title = title {
             tabs[index].title = title

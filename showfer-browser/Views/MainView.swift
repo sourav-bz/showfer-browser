@@ -58,6 +58,12 @@ struct MainView: View {
             }
         }
         .preferredColorScheme(.light)
+        .onAppear {
+            if tabManager.tabs.isEmpty {
+                let blankURL = URL(string: "about:blank")!
+                tabManager.addTab(url: blankURL)
+            }
+        }
     }
 }
 

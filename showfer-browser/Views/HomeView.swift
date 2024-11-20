@@ -8,19 +8,24 @@ struct HomeView: View {
     var body: some View {
         VStack {
             if let selectedTab = tabManager.selectedTab {
-                SearchBar(text: Binding(
-                    get: { selectedTab.url?.absoluteString ?? "" },
-                    set: { self.searchText = $0 }
-                ), onCommit: loadURL,
-                   onBack: goBack,
-                   onForward: goForward,
-                   canGoBack: selectedTab.canGoBack,
-                   canGoForward: selectedTab.canGoForward)
+                if selectedTab.url?.absoluteString == "about:blank" {
+                    DefaultView()
+                } else {
+                    SearchBar(text: Binding(
+                        get: { selectedTab.url?.absoluteString ?? "" },
+                        set: { self.searchText = $0 }
+                    ), onCommit: loadURL,
+                    onBack: goBack,
+                    onForward: goForward,
+                    canGoBack: selectedTab.canGoBack,
+                    canGoForward: selectedTab.canGoForward)
 
-                WebView(url: selectedTab.url ?? URL(string: "about:blank")!,
-                    tabIndex: tabManager.selectedTabIndex,
-                    tabManager: tabManager)
-                .edgesIgnoringSafeArea(.bottom)
+                    WebView(url: selectedTab.url ?? URL(string: "about:blank")!,
+                        tabIndex: tabManager.selectedTabIndex,
+                        tabManager: tabManager)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .id(selectedTab.id)
+                }
             } else {
                 DefaultView()
             }

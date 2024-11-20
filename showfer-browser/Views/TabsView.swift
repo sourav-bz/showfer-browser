@@ -2,17 +2,13 @@ import SwiftUI
 
 struct TabsView: View {
     @ObservedObject var tabManager: TabManager
-
-    // Define the grid layout
-    private let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-    ]
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
+            LazyVStack(spacing: 16) {
                 ForEach(tabManager.tabs.indices, id: \.self) { index in
-                    TabGridItem(
+                    TabListItem(
                         tab: Binding(
                             get: { tabManager.tabs[index] },
                             set: { tabManager.tabs[index] = $0 }
@@ -22,6 +18,7 @@ struct TabsView: View {
                     )
                     .onTapGesture {
                         tabManager.selectedTabIndex = index
+                        dismiss()
                     }
                 }
             }
@@ -43,44 +40,68 @@ struct TabsView: View {
     }
 
     private func addNewTab() {
-        tabManager.addTab(url: URL(string: "https://www.example.com")!)
+        tabManager.addTab(url: URL(string: "about:blank")!)
+        dismiss()
     }
 }
 
-struct TabGridItem: View {
+struct TabListItem: View {
     @Binding var tab: Tab
     let isSelected: Bool
     let onDelete: () -> Void
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            VStack {
-                Image(systemName: "globe")
-                    .font(.largeTitle)
+        ZStack(alignment: .trailing) {
+            HStack {
+                if let url = tab.url, let host = url.host {
+                    AsyncImage(url: URL(string: "https://\(host)/favicon.ico")) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    } placeholder: {
+                        Image(systemName: "globe")
+                    }
+                    .font(.title2)
                     .foregroundColor(.blue)
-                Text(tab.title)
-                    .font(.headline)
-                    .lineLimit(1)
-                if let url = tab.url {
-                    Text(url.host ?? "")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                    .frame(width: 40, height: 40)
                 } else {
-                    Text("No URL")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image(systemName: "globe")
+                        .font(.title2)
                         .foregroundColor(.blue)
-                        .offset(y: 5)
+                        .frame(width: 40)
                 }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(tab.title.isEmpty ? (tab.url?.host ?? "New Tab") : tab.title)
+                        .font(.headline)
+                        .lineLimit(1)
+                    if let url = tab.url {
+                        Text(url.host ?? tab.title)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                
+                Spacer()
             }
-            .frame(height: 120)
             .padding()
-            .background(Color.gray.opacity(0.1))
+            .frame(maxWidth: .infinity)
+            .background(
+                Color(isSelected ? .secondarySystemBackground : .systemBackground)
+                    .opacity(isSelected ? 1 : 0.1)
+            )
             .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray.opacity(isSelected ? 0 : 0.2), lineWidth: 1)
+            )
+            .shadow(
+                color: .black.opacity(isSelected ? 0.1 : 0),
+                radius: isSelected ? 3 : 0,
+                x: 0,
+                y: 1
+            )
             
             Button(action: onDelete) {
                 Image(systemName: "xmark.circle.fill")
